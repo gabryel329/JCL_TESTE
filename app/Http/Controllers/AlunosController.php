@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AlunosExport;
 use App\Models\Alunos;
 use App\Models\Cursos;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AlunosController extends Controller
 {
@@ -42,7 +45,7 @@ class AlunosController extends Controller
         $existeAluno = Alunos::where('cpf', $cpf)->first();
     
         if ($existeAluno) {
-            return redirect()->route('aluno.index')->with('error', 'Aluno já cadastrado!');
+            return redirect()->route('aluno.index')->with('error', 'Aluno jÃ¡ cadastrado!');
         }
     
         Alunos::create([
@@ -81,7 +84,7 @@ class AlunosController extends Controller
         $alunos = Alunos::find($id);
 
         if (!$alunos){
-            return redirect()->back()->with('error', 'Aluno(a) não encontrado!');
+            return redirect()->back()->with('error', 'Aluno(a) nÃ£o encontrado!');
         }
 
         $alunos->nome = $request->input('nome');
@@ -106,6 +109,18 @@ class AlunosController extends Controller
     
         $alunos->delete();
     
-        return redirect()->route('aluno.index')->with('error', 'Aluno(a) excluído com sucesso!');
+        return redirect()->route('aluno.index')->with('error', 'Aluno(a) excluÃ­do com sucesso!');
     } 
+
+    public function excel()
+    {
+        return Excel::download(new AlunosExport, 'alunos.xlsx');
+    }
+
+    public function pdf()
+    {
+        $alunos = Alunos::with('curso')->get();
+        $pdf = Pdf::loadView('pdf.alunos', compact('alunos'));
+        return $pdf->download('alunos.pdf');
+    }
 }

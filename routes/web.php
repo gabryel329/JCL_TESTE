@@ -29,6 +29,9 @@ Route::get('/Alunos', [AlunosController::class, 'index'])->name('aluno.index');
 Route::post('/Alunos', [AlunosController::class, 'store'])->name('aluno.store');
 Route::put('/Alunos/{id}', [AlunosController::class, 'update'])->name('aluno.update');
 Route::delete('/Alunos/{id}', [AlunosController::class, 'destroy'])->name('aluno.destroy');
+Route::get('/Alunos/excel', [AlunosController::class, 'excel'])->name('aluno.excel');
+Route::get('Alunos/pdf', [AlunosController::class, 'pdf'])->name('aluno.pdf');
+
 
 //Cursos
 Route::get('/Cursos', [CursosController::class, 'index'])->name('curso.index');
